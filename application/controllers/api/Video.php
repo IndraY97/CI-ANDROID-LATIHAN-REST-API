@@ -12,6 +12,42 @@ class Video  extends REST_Controller {
         $this->load->database();
     }
 
+    function auth_post(){
+        //daftar user dengan android_id 
+
+        //cek data user
+        $id = $this->post('android_id');
+        $this->db->where('android_id', $id);
+        $users = $this->db->get('lazday_user')->result();
+
+        //bila user sudah ada maka akan dipanggil
+        if ($users){
+            $data = array( 'last_login' => date("Y-m-d H:i:s") );
+            $this->db->where('android_id', $id);
+            $update = $this->db->update('lazday_user', $data);
+            if($update){
+                $this->response(array('response' => 'success', 'users' => $users ), 201);
+            } else {
+                $this->response(array('response' => 'fail', 502));
+            }
+        } else {
+            //bila android_id belum terdaftar maka akan ditambah baru
+            $data = array(
+                'android_id'    => $this->post('android_id'),
+                'created'       => date("Y-m-d H:i:s"),
+                'last_login'    => date("Y-m-d H:i:s")
+            );
+            $insert = $this->db->insert('lazday_user', $data);
+            if($insert){
+                $this->db->where('android_id', $id);
+                $users = $this->db->get('lazday_user')->result();
+                $this->response(array('response' => 'success', 'users' => $users ), 201);
+            } else {
+                $this->response(array('response' => 'fail', 502));
+            }
+        }
+    }
+
     public function index_get(){
 
         //Variable dan Parameter untuk memanggil data bedasarkan parameter
@@ -56,6 +92,7 @@ class Video  extends REST_Controller {
 
     }
 
+    //sama dengan public function category_get()
     // public function category_post(){
     //     $category   = $this->post('category');
     //     $this->db->like('category', $category);
