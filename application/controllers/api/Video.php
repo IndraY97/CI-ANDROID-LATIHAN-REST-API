@@ -47,13 +47,20 @@ class Video  extends REST_Controller {
 
         if ($category != null || $category != '') {
             $this->db->like('category', $category);
-            $category = $this->db->get('lazday_cat')->result();
-            $this->response(array('category' => $category), 200);
+            $videos = $this->db->get('lazday_video')->result();
+            $this->response(array('videos' => $videos), 200);
         }else{
             $category = $this->db->get('lazday_cat')->result();
             $this->response(array('category' => $category), 200);
         }
 
     }
+
+    // public function category_post(){
+    //     $category   = $this->post('category');
+    //     $this->db->like('category', $category);
+    //     $videos = $this->db->get('lazday_video')->result_array();
+    //     $this->response(array('videos' => $videos), 200); 
+    // }
 }
         
