@@ -29,13 +29,30 @@ class Video  extends REST_Controller {
             //menampilkan data berdasrkan title
             $this->db->like('title', $title);
             $videos = $this->db->get('lazday_video')->result();
-            $this->response(array('videos_judul' => $videos), 200);
+
+            $this->db->like('title', $title);
+            $list = $this->db->get('lazday_list')->result();
+            $this->response(array('videos_judul' => $videos, 'lists_judul' => $list), 200);
             
         }else{
             $videos = $this->db->get('lazday_video')->result();
             $this->response(array('videos' => $videos), 200);
         }
 
+
+    }
+
+    public function category_get(){
+        $category   = $this->get('category');
+
+        if ($category != null || $category != '') {
+            $this->db->like('category', $category);
+            $category = $this->db->get('lazday_cat')->result();
+            $this->response(array('category' => $category), 200);
+        }else{
+            $category = $this->db->get('lazday_cat')->result();
+            $this->response(array('category' => $category), 200);
+        }
 
     }
 }
