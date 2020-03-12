@@ -99,6 +99,19 @@ class Video  extends REST_Controller {
     //     $videos = $this->db->get('lazday_video')->result_array();
     //     $this->response(array('videos' => $videos), 200); 
     // }
+    
+    function like_get() {
+        $id = $this->get('android_id');
+        if ($id == '') {
+            $likes = $this->db->get('lazday_like')->result();
+        } else {
+            $this->db->select('*, lazday_like.created as like_created, lazday_list.created as list_created');
+            $this->db->join('lazday_list', 'lazday_list.list_id = lazday_like.list_id');
+            $this->db->where('android_id', $id);
+            $likes = $this->db->get('lazday_like')->result();
+        }
+        $this->response( array( 'likes' => $likes), 200);
+    }
 
     function like_post() {
         $android_id = $this->post('android_id');
