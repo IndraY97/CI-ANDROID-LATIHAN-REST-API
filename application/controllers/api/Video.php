@@ -99,5 +99,37 @@ class Video  extends REST_Controller {
     //     $videos = $this->db->get('lazday_video')->result_array();
     //     $this->response(array('videos' => $videos), 200); 
     // }
+
+    function like_post() {
+        $android_id = $this->post('android_id');
+        $list_id    = $this->post('list_id');
+        $this->db->where(array('android_id' => $android_id, 'list_id' => $list_id));
+        $likes = $this->db->get('lazday_like')->result();
+        if(!$likes){
+            $data = array(
+                'android_id'    => $this->post('android_id'),
+                'list_id'       => $this->post('list_id'),
+                'created'       => date("Y-m-d H:i:s")
+            );
+            $insert = $this->db->insert('lazday_like', $data);
+            if ($insert) {
+                $this->response( array('response' => 'success' , 200));
+            } else {
+                $this->response( array('response' => 'fail', 502));
+            }
+        }
+    }
+
+    function unlike_post() {
+        $android_id = $this->post('android_id');
+        $list_id = $this->post('list_id');
+        $this->db->where(array('android_id' => $android_id, 'list_id' => $list_id ));
+        $delete = $this->db->delete('lazday_like');
+        if ($delete) {
+            $this->response(array('response' => 'success'), 201);
+        } else {
+            $this->response(array('response' => 'fail', 502));
+        }
+    }
 }
         
